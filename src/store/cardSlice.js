@@ -3,8 +3,9 @@ import axios from 'axios';
 
 export const getCards = createAsyncThunk(
     'cards/getCards',
-    async () => {
-        let { data } = await axios.get('https://rickandmortyapi.com/api/character');
+    async (_, { getState }) => {
+        let { currentPage } = getState().cards;
+        let { data } = await axios.get(`https://rickandmortyapi.com/api/character?page=${currentPage}`);
         return data;
     }
 );
@@ -12,15 +13,23 @@ export const getCards = createAsyncThunk(
 const cardSlice = createSlice({
     name: 'cards',
     initialState: {
-        cards: []
+        cards: [],
+        currentPage: 1,
+        totalPages: 1
     },
-    reducers: {},
+    reducers: {
+        changePage: (state, action) => {
+            state.currentPage = action.payload;
+        }
+    },
     extraReducers: (builder) => {
         builder
         .addCase(getCards.fulfilled, (state, action) => {
             state.cards = action.payload.results;
+            state.totalPages = action.payload.info.pages;
         })
     }
 });
 
+export const { changePage } = cardSlice.actions;
 export default cardSlice.reducer;

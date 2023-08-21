@@ -7,9 +7,8 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 export default function CardItem({ card }) {
-  console.log(card);
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ maxWidth: 345 }} className="list__item">
       <CardMedia
         sx={{ height: 140 }}
         image={card.image}
